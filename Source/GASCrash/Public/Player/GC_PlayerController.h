@@ -9,6 +9,7 @@
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+struct FGameplayTag;
 
 UCLASS()
 class GASCRASH_API AGC_PlayerController : public APlayerController
@@ -38,5 +39,6 @@ private:
 	void Look(const FInputActionValue& InputValue);
 	
 	void Primary();
+	void ActivateAbility(const FGameplayTag& AbilityTag) const;
 	
 };
