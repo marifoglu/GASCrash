@@ -39,6 +39,8 @@ AGC_PlayerCharacter::AGC_PlayerCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>("FollowCamera");
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	Tags.Add(CrashTags::Player);
 }
 
 UAbilitySystemComponent* AGC_PlayerCharacter::GetAbilitySystemComponent() const
@@ -49,6 +51,14 @@ UAbilitySystemComponent* AGC_PlayerCharacter::GetAbilitySystemComponent() const
 	return GCPlayerState->GetAbilitySystemComponent();
 }
 
+UAttributeSet* AGC_PlayerCharacter::GetAttributeSet() const
+{
+	AGC_PlayerState * GCPlayerState = Cast<AGC_PlayerState>(GetPlayerState());
+	if (!IsValid(GCPlayerState)) return nullptr;
+
+	return GCPlayerState->GetAttributeSet();
+}
+
 void AGC_PlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -56,7 +66,15 @@ void AGC_PlayerCharacter::PossessedBy(AController* NewController)
 	if (!IsValid(GetAbilitySystemComponent()) || !HasAuthority()) return;
 
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+	
 	GiveStartupAbilities();
+	InitializeAttributes();
+
+	UGC_AttributeSet* GC_AttributeSet = Cast<UGC_AttributeSet>(GetAttributeSet());
+	if (!IsValid(GC_AttributeSet)) return;
+	
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GC_AttributeSet->GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
 }
 
 void AGC_PlayerCharacter::OnRep_PlayerState()
@@ -66,4 +84,10 @@ void AGC_PlayerCharacter::OnRep_PlayerState()
 	if (!IsValid(GetAbilitySystemComponent())) return;
 
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+	
+	UGC_AttributeSet* GC_AttributeSet = Cast<UGC_AttributeSet>(GetAttributeSet());
+	if (!IsValid(GC_AttributeSet)) return;
+	
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GC_AttributeSet->GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
 }
