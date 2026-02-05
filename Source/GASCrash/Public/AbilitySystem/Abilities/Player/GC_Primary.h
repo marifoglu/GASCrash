@@ -16,13 +16,7 @@ class GASCRASH_API UGC_Primary : public UGC_GameplayAbility
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Crash|Abilities")
-	TArray<AActor*> HitBoxOverlapTest();
-	
-	UFUNCTION(BlueprintCallable, Category="Crash|Abilities")
 	void SendHitReactEventToActor(const TArray<AActor*>& ActorsHit);
-private:
-
-	void DrawHitBoxOverlapDebugs(const TArray<FOverlapResult>& OverlapResults, const FVector& HitBoxLocation) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Crash|Abilities")

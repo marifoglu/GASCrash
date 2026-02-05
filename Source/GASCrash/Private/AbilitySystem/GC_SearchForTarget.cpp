@@ -38,7 +38,6 @@ void UGC_SearchForTarget::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 void UGC_SearchForTarget::StartSearch()
 {
-	if (bDrawDebug) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("UGC_SearchForTarget::StartSearch")));
 	if (!OwningEnemy.IsValid()) return;	
 
 	const float SearchDelay = FMath::RandRange(OwningEnemy->MinAttackDelay, OwningEnemy->MaxAttackDelay);
@@ -49,7 +48,7 @@ void UGC_SearchForTarget::StartSearch()
 
 void UGC_SearchForTarget::EndAttackEventReceived(FGameplayEventData Payload)
 {
-	if (OwningEnemy.IsValid())
+	if (OwningEnemy.IsValid() && !OwningEnemy->bIsBeingLaunched)
 	{
 		StartSearch();
 	}
@@ -59,8 +58,7 @@ void UGC_SearchForTarget::Search()
 {
 	const FVector SearchOrigin = GetAvatarActorFromActorInfo()->GetActorLocation();
 	if (!OwningEnemy.IsValid()) return;
-	
-	FClosestActorWithTagResult ClosestActorResult = UGC_BlueprintLibrary::FindClosestActorWithTag(GetAvatarActorFromActorInfo(), SearchOrigin, CrashTags::Player);
+	FClosestActorWithTagResult ClosestActorResult = UGC_BlueprintLibrary::FindClosestActorWithTag(GetAvatarActorFromActorInfo(), SearchOrigin, CrashTags::Player, OwningEnemy->SearchRange);
 	
 	TargetBaseCharacter = Cast<AGC_BaseCharacter>(ClosestActorResult.Actor);
 	if (!TargetBaseCharacter.IsValid())
@@ -120,4 +118,3 @@ void UGC_SearchForTarget::Attack()
 	const FGameplayTag AttackTag = GCTags::GCAbilities::Enemy::Attack;
 	GetAbilitySystemComponentFromActorInfo()->TryActivateAbilitiesByTag(AttackTag.GetSingleTagContainer());
 }
-  

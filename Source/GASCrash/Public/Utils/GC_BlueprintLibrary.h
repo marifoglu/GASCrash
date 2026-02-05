@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GC_BlueprintLibrary.generated.h"
 
@@ -40,5 +41,20 @@ public:
 	static FName GetHitDirectionName(const EHitDirection& HitDirection);
 
 	UFUNCTION(BlueprintCallable)
-	static FClosestActorWithTagResult FindClosestActorWithTag(const UObject* WorldContextObject, const FVector& Origin, const FName Tag);
+	static FClosestActorWithTagResult FindClosestActorWithTag(UObject* WorldContextObject, const FVector& Origin, const FName Tag, float SearchRange);
+
+	UFUNCTION(BlueprintCallable)
+	static void SendDamageEventToPlayer(AActor* Target, const TSubclassOf<UGameplayEffect>& DamageEffect, UPARAM(ref) FGameplayEventData Payload, const FGameplayTag& DataTag, float Damage, const FGameplayTag& EventTagOverride, UObject* OptionalParticleSystem = nullptr);
+
+	UFUNCTION(BlueprintCallable)
+	static void SendDamageEventToPlayers(TArray<AActor*> Target, const TSubclassOf<UGameplayEffect>& DamageEffect, UPARAM(ref) FGameplayEventData Payload, const FGameplayTag& DataTag, float Damage, const FGameplayTag& EventTagOverride, UObject* OptionalParticleSystem = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category="Crash|Abilities")
+	static TArray<AActor*> HitBoxOverlapTest(AActor* AvatarActor, float HitBoxRadius, float HitBoxForwardOffset = 0.f, float HitBoxElevationOffset = 0.f, bool bDrawDebugs = false);
+
+	static void DrawHitBoxOverlapDebugs(const UObject* WorldContextObject, const TArray<FOverlapResult>& OverlapResults, const FVector& HitBoxLocation, float HitBoxRadius);
+
+	UFUNCTION(BlueprintCallable, Category="Crash|Abilities")
+	static TArray<AActor*> ApplyKnockback(AActor* AvatarActor, const TArray<AActor*>& HitActors, float InnerRadius, float OuterForce, float LaunchForceMagnitude, float RotationAngle = 45.f, bool bDrawDebugs = false );
+	
 };

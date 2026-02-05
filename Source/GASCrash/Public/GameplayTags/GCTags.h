@@ -5,6 +5,13 @@
 
 namespace GCTags
 {
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(None)
+	
+	namespace SetByCallers
+	{
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Projectile)
+	}
+	
 	namespace GCAbilities
 	{
 		UE_DECLARE_GAMEPLAY_TAG_EXTERN(ActivateOnGiven)
@@ -23,10 +30,16 @@ namespace GCTags
 	{
 		UE_DECLARE_GAMEPLAY_TAG_EXTERN(KillScored);
 		
+		namespace Player
+		{
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Death)
+		}
 		namespace Enemy
 		{
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(EndAttack)
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(MeleeTraceHit)
 		}
 		
 	}

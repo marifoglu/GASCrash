@@ -43,6 +43,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateToTarget(AActor* RotateTarget);
+
+	UPROPERTY(EditAnywhere, Category="Crash|Attributes")
+	float SearchRange{1000.f};
 	
 protected:
 	void GiveStartupAbilities();	
