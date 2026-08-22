@@ -1,16 +1,23 @@
-Binaries
-DerivedDataCache
-Intermediate
-Saved
-Build
+﻿# Unreal folders that should never be in git
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
 
-.vscode
-.vs
-*.VC.db
-*.opensdf
-*.opendb
-*.sdf
+# IDE junk
+.idea/
+.vs/
+.vscode/
+
+# Content assets (keep them out of git/LFS entirely)
+Content/
+
+# These project files can be regenerated
 *.sln
 *.suo
 *.xcodeproj
 *.xcworkspace
+
+# User-specific files
+*.DotSettings.user
